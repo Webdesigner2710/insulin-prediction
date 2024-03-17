@@ -30,7 +30,7 @@ def main():
 
     # Filter data based on brand name
     filtered_data = store_data[store_data['Brand Name'] == brand_name]
-
+    store_data['Store Pincode'] = store_data['Store Pincode'].str.replace(',', '')
     # Display filtered data
     if not filtered_data.empty:
         st.subheader(f'Stores selling {brand_name}:')
