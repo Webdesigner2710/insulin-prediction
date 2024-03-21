@@ -10,11 +10,11 @@ def main():
 
     if page == "Home":
         st.title("Insulin Prediction Website")
-        st.image("insulin image.png", caption="Your Logo", use_column_width=True)
+        st.image("insulin image.png", use_column_width=True)
         st.write("""
             Welcome to our Insulin Prediction Website!
 
-            Here, you can explore various features related to insulin stocks and locate stores selling specific insulin brands.
+            Here, you can explore various features related to insulin stocks and locate stores selling specific insulin brands and based on store pincodes.
 
             Use the dropdown menu to navigate between different sections of the website.
 
