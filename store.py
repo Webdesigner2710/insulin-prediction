@@ -33,6 +33,9 @@ def main():
 
     # Filter data based on brand name
     filtered_data = store_data[store_data['Brand Name'] == brand_name]
+    
+    # Convert pincode to string
+    filtered_data['Store Pincode'] = filtered_data['Store Pincode'].astype(str)
 
     # Display filtered data
     if not filtered_data.empty:
