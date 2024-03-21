@@ -26,7 +26,10 @@ def main():
     st.title('Store Locator')
 
     # Sidebar - Brand Name input
-    brand_name = st.sidebar.text_input("Enter Brand Name")
+    
+    brand_names = ['Human Actrapid', 'LUPISULIN N', 'NovoRapid', 'Ryzodeg', 'Fiasp','Basalog Refil', 'APIDRA', 'Wosulin', 'HUMARAP', 'LANTUS','LEVEMIR', 'Humstard 30/70', 'Humapen Ergo']  
+    
+    brand_name = st.sidebar.selectbox("Select Store Pincode", brand_names)
 
     # Filter data based on brand name
     filtered_data = store_data[store_data['Brand Name'] == brand_name]
