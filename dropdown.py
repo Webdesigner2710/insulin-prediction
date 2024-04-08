@@ -2,12 +2,13 @@ import streamlit as st
 import pickle
 import numpy as np
 import pandas as pd
+import random
 from sklearn.preprocessing import LabelEncoder
 
 # Load the trained Logistic Regression model
-with open('log_model.pkl', 'rb') as file:
-    lr_model = pickle.load(file)
-    
+with open('xgb_model.pkl', 'rb') as file:
+    xgb_model = pickle.load(file)
+
 # Function to get pincode based on store name
 def get_pincode(store_name):
     pincode_dict = {
@@ -81,7 +82,7 @@ def get_insulin_details(brand_name):
         
     }
     return insulin_details.get(brand_name, {'Insulin Name': '', 'Insulin Type': '', 'Dosage Strength': '', 'Price (INR)': ''})
-
+    
 store_to_brands = {
     'NEW GALAXY MEDICAL AND GENERAL STORE': ['Human Actrapid', 'LUPISULIN N', 'NovoRapid', 'Ryzodeg'],
     'VINAYAK MEDICAL & GENERAL STORES': ['Fiasp', 'Basalog Refil', 'APIDRA'],
@@ -132,6 +133,7 @@ store_to_brands = {
     'DADAR PHARMACY': ['Human Actrapid', 'Humstard 30/70', 'Wosulin', 'HUMARAP', 'Ryzodeg', 'Wosulin'],
     'SHREE SRINIVASA MEDICAL & GENERAL STORE': ['NovoRapid', 'LEVEMIR', 'Humapen Ergo', 'APIDRA']
 }
+
 
 # Streamlit app
 def main():
@@ -252,7 +254,7 @@ def main():
 
     # Display price based on selected brand name
     st.write('Price (INR):', insulin_details.get('Price (INR)', ''))
-    
+
     # Make prediction on button click
     if st.button('Predict'):
         # If selected brand is not available in the selected store
@@ -269,7 +271,11 @@ def main():
                 'Dosage Strength': [dosage_strength],
                 'Price (INR)': [price]
             })
+            # Convert 'Store Pincode' column to numeric type
+            input_data['Store Pincode'] = input_data['Store Pincode'].astype(int)
 
+            # Convert 'Dosage Strength' column to numeric type
+            input_data['Dosage Strength'] = input_data['Dosage Strength'].astype(float)
             # Perform label encoding for categorical text features
             categorical_features = ['Store Name', 'Brand Name', 'Insulin Name', 'Insulin Type']
             label_encoders = {}  # Dictionary to store label encoders for each categorical feature
@@ -279,10 +285,13 @@ def main():
                 # Fit label encoder and transform the feature
                 input_data[feature] = label_encoders[feature].fit_transform(input_data[feature])
 
-            # Make prediction
-            prediction = lr_model.predict(input_data)
+            prediction = xgb_model.predict(input_data)
+        
+            # Add randomness and round the prediction to the nearest integer
+            prediction_with_noise = int(round(prediction[0] + random.uniform(-0.5, 0.5)))
+
             # Display prediction
-            st.write('Predicted Insulin Stock:', prediction[0])
+            st.write('Predicted Insulin Stock:', prediction_with_noise)
 
 if __name__ == '__main__':
     main()
